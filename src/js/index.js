@@ -36,7 +36,6 @@ function generateTODO(elem) {
   const filter = elem.querySelector('.filters');
   const count = elem.querySelector('strong');
   const clear = elem.querySelector('.clear-completed');
-  const hide = elem.querySelectorAll('.hide');
 
   ul.addEventListener('click', ({ target: element }) => {
     const elementLi = element.closest('li');
@@ -53,12 +52,13 @@ function generateTODO(elem) {
       return;
     }
 
-    if (!clear.classList.contains('hide-btn')) {
-      clear.classList.add('hide-btn');
-    }
-
     elementLi.classList.toggle('completed');
-    clear.classList.remove('hide-btn');
+
+    if (!ul.querySelector('.completed')) {
+      clear.classList.remove('show-btn');
+    } else {
+      clear.classList.add('show-btn');
+    }
   });
 
   input.addEventListener('change', ({ target }) => {
@@ -74,13 +74,22 @@ function generateTODO(elem) {
         </div>
       </li>`);
 
-    for (let item of hide) {
-      item.classList.remove('hide');
-    }
-
     target.value = '';
     updateCount(count, ul);
 
+    if (ul.querySelector('.view')) {
+      for (let item of elem.querySelectorAll('.hide')) {
+        item.classList.add('show');
+      }
+    }
+
+    setInterval(() => {
+      if (!ul.querySelector('.view')) {
+        for (let item of elem.querySelectorAll('.hide')) {
+          item.classList.remove('show');
+        }
+      }
+    });
   });
 
   filter.addEventListener('click', ({ target }) => {
@@ -113,9 +122,13 @@ function generateTODO(elem) {
     updateCount(count, ul);
   });
 
-  // if (!ul.firstChild) {
-  //   elem.lastChild.classList.add('hide');
-  // }
+  clear.addEventListener('click', () => {
+    const items = ul.querySelectorAll('.completed');
+    for (let item of items) {
+      item.remove();
+    }
+    updateCount(count, ul);
+  });
 }
 
 function updateCount(elem, listContainer) {

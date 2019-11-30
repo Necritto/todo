@@ -317,6 +317,14 @@ button {
   display: none;
 }
 
+.show {
+  display: block;
+}
+
+.show-btn {
+  display: block;
+}
+
 @media screen and (-webkit-min-device-pixel-ratio:0) {
 
   .toggle-all,
